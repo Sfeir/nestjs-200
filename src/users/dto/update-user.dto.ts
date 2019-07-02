@@ -1,6 +1,6 @@
 export class UpdateUserDto {
-  readonly id: number;
-  readonly firstname: string;
-  readonly surname: string;
+  readonly username: string;
+  readonly email: string;
+  readonly password: string;
   readonly age: number;
 }

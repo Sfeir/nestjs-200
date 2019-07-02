@@ -1,31 +1,23 @@
-import { Controller, Delete, Get, Param, Post, Put, Query, Body } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Body } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  @Get(':email')
+  findByEmail(@Param('email') email: string) {
+    return this.usersService.findByEmail(email);
+  }
+
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    return `This action adds a new user : ${JSON.stringify(createUserDto)}`;
-  }
-
-  @Get()
-  findAll(@Query() query) {
-    return `This action returns all users (start: ${query.start}, limit: ${query.limit} items)`;
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return `This action returns a #${id} user`;
-  }
-
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user : ${JSON.stringify(updateUserDto)}`;
+    return this.usersService.create(createUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return `This action removes a #${id} user`;
+  delete(@Param('id') id: number) {
+    return this.usersService.delete(id);
   }
 }
