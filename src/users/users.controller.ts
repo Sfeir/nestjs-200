@@ -1,22 +1,9 @@
-import {
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Body,
-  HttpException,
-  HttpStatus,
-  ParseIntPipe,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Body, HttpException, HttpStatus, ParseIntPipe } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
-import { LoggingInterceptor } from '../shared/logging.interceptor';
-import { OverrideInterceptor } from '../shared/override.interceptor';
+import { User } from './user.decorator';
 
 @Controller('users')
-@UseInterceptors(OverrideInterceptor)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -31,8 +18,8 @@ export class UsersController {
     );
   }
 
-  @Get(':email')
-  findByEmail(@Param('email') email: string) {
+  @Get('findByEmail')
+  findByEmail(@User('email') email: string) {
     return this.usersService.findByEmail(email);
   }
 
