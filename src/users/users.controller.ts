@@ -2,13 +2,15 @@ import { Controller, Delete, Get, Param, Post, Body, HttpException, HttpStatus, 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { User } from './user.decorator';
-import { ApiUseTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 
-@ApiUseTags('users')
+@ApiUseTags('user')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @ApiOperation({ title: 'Generate an error' })
+  @ApiResponse({ status: 501, description: 'Not implemented exception with a custom message' })
   @Get('error')
   async error() {
     throw new HttpException(
@@ -20,6 +22,9 @@ export class UsersController {
     );
   }
 
+  @ApiOperation({ title: 'Get user by email' })
+  @ApiResponse({ status: 200, description: 'User found.' })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
   @Get('findByEmail')
   findByEmail(@User('email') email: string) {
     return this.usersService.findByEmail(email);

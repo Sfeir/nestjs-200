@@ -7,7 +7,10 @@ import { LoggingInterceptor } from './shared/logging.interceptor';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const appOptions = { cors: true };
+  const app = await NestFactory.create(AppModule, appOptions);
+  app.setGlobalPrefix('api');
+
   app.use(logger);
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(new ValidationPipe());
@@ -17,10 +20,11 @@ async function bootstrap() {
     .setTitle('Users example')
     .setDescription('The users API description')
     .setVersion('1.0')
-    .addTag('users')
+    .setBasePath('api')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('/docs', app, document);
 
   await app.listen(3000);
 }
